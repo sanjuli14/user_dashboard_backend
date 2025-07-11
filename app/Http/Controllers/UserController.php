@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\User;
 
 class UserController extends Controller {
-    // Listar todos los usuarios
-    public function index() {
-        return User::all();
-    }
 
-    // Filtrar por rol
-    public function filter($role) {
-        return User::where('role', $role)->get();
-    }
+public function filter($role) {
+    $users = User::where('role', $role)->paginate(10); // 10 items por página
+    return response()->json($users);
+}
 
+
+public function index() {
+    $users = User::paginate(10);
+    return response()->json($users);
+}
     // Estadísticas
     public function stats() {
         return User::selectRaw('role, count(*) as count')
